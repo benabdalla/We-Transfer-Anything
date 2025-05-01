@@ -1,8 +1,12 @@
+![img_1.png](img_1.png)
+
 ![img.png](img.png)
 
-python -m venv .venv
+ **guide  installation :** 
 
-.venv\Scripts\activate
+**python -m venv .venv**
+
+**.venv\Scripts\activate
 
 pip install flask
 
@@ -22,4 +26,4 @@ CREATE TABLE codes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     code_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+);**
