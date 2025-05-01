@@ -12,6 +12,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 db = SQLAlchemy(app)
 
+
 class Code(db.Model):
     __tablename__ = 'codes'  # <-- Add this line to match the real table name
 
@@ -21,6 +22,7 @@ class Code(db.Model):
 
 # Initialize the default access code only once
 setup_done = False
+
 
 @app.before_request
 def init_code():
@@ -32,10 +34,14 @@ def init_code():
             db.session.commit()
         setup_done = True
 
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         entered_code = request.form.get('code')
+        if entered_code is None or entered_code == '':  # Check if the code is empty or None
+            return render_template('login.html', error="Please enter the access code.")
+
         code = Code.query.first()
         if code and check_password_hash(code.code_hash, entered_code):
             session['authenticated'] = True
@@ -43,6 +49,7 @@ def login():
         else:
             return render_template('login.html', error="Invalid code.")
     return render_template('login.html')
+
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -59,9 +66,13 @@ def index():
     files = os.listdir(app.config['UPLOAD_FOLDER'])
     return render_template('index.html', files=files)
 
+
+
+
 @app.route('/uploads/<filename>')
 def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+
 
 @app.route('/delete/<filename>', methods=['POST'])
 def delete_file(filename):
@@ -69,6 +80,7 @@ def delete_file(filename):
     if os.path.exists(filepath):
         os.remove(filepath)
     return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
