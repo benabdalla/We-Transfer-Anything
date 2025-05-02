@@ -1,24 +1,24 @@
-    body {
+body {
       background: #f8f9fa;
-      padding: 40px;
     }
-
-    .container {
-      background: #fff;
-      padding: 30px;
+    .file-card {
+      border: 1px solid #dee2e6;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 10px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .upload-card {
       border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+      padding: 20px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-
-    .btn-animated {
-      transition: 0.3s ease;
+    .header-title {
+      font-size: 2rem;
+      font-weight: bold;
     }
-
-    .btn-animated:hover {
-      transform: scale(1.05);
-    }
-
-    #progressContainer {
-      display: none;
-      margin-top: 20px;
+    .progress {
+      height: 20px;
     }

@@ -25,5 +25,12 @@ USE code_auth;
 CREATE TABLE codes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     code_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);**
+    email VARCHAR(255)
+);
+
+CREATE TABLE files (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL,
+    code_id INT NOT NULL,
+    FOREIGN KEY (code_id) REFERENCES codes(id)
+);

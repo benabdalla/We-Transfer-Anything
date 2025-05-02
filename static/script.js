@@ -1,38 +1,37 @@
-document.getElementById('uploadForm').addEventListener('submit', function(e) {
-    e.preventDefault();  // Prevent form submission
+const uploadForm = document.getElementById('uploadForm');
+    const progressBar = document.getElementById('progressBar');
+    const progressContainer = document.querySelector('.progress');
 
-    var fileInput = document.getElementById('fileInput');
-    var file = fileInput.files[0];  // Get the selected file
-    if (!file) return;  // If no file is selected, exit
+    uploadForm.addEventListener('submit', function(e) {
+      e.preventDefault(); // prevent default form submit
 
-    var formData = new FormData();
-    formData.append('file', file);  // Append the file to FormData object
+      const formData = new FormData(uploadForm);
+      const xhr = new XMLHttpRequest();
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/index', true);
+      xhr.open('POST', uploadForm.action);
 
-    // Show the progress bar
-    document.getElementById('progressContainer').style.display = 'block';
-
-    // Update progress bar as the file is uploaded
-    xhr.upload.onprogress = function(e) {
+      xhr.upload.addEventListener('progress', function(e) {
         if (e.lengthComputable) {
-            var percent = (e.loaded / e.total) * 100;
-            document.getElementById('progressBar').style.width = percent + '%';
-            document.getElementById('progressBar').innerText = Math.round(percent) + '%';
+          const percent = Math.round((e.loaded / e.total) * 100);
+          progressBar.style.width = percent + '%';
+          progressBar.setAttribute('aria-valuenow', percent);
+          progressBar.textContent = percent + '%';
+          progressContainer.style.display = 'block';
         }
-    };
+      });
 
-    // When the upload is complete
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            console.log('File uploaded successfully!');
-            window.location.reload();  // Reload page to show uploaded files
+      xhr.onload = function() {
+        if (xhr.status == 200) {
+          progressBar.classList.remove('progress-bar-animated');
+          progressBar.classList.add('bg-success');
+          progressBar.textContent = 'Upload complete!';
+          setTimeout(() => { location.reload(); }, 1000);
         } else {
-            console.error('Error uploading file!');
+          progressBar.classList.remove('progress-bar-animated');
+          progressBar.classList.add('bg-danger');
+          progressBar.textContent = 'Upload failed!';
         }
-    };
+      };
 
-    // Send the request
-    xhr.send(formData);
-});
+      xhr.send(formData);
+    });
