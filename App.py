@@ -54,14 +54,14 @@ def login():
         if code_entry and check_password_hash(code_entry.code_hash, entered_code):
             session['authenticated'] = True
             session['code_id'] = code_entry.id
-            return redirect(url_for('index'))
+            return redirect(url_for('transferQaulipro'))
 
         return render_template('login.html', error="Invalid code.")
 
     return render_template('login.html')
 
-@app.route('/index', methods=['GET', 'POST'])
-def index():
+@app.route('/transferQaulipro', methods=['GET', 'POST'])
+def transferQaulipro():
     if not session.get('authenticated'):
         return redirect(url_for('login'))
 
@@ -74,7 +74,7 @@ def index():
 
         if not uploaded_file or not recipient_email:
             flash('Please provide both file and email.', 'danger')
-            return redirect(url_for('index'))
+            return redirect(url_for('transferQaulipro'))
 
         # Generate new code
         new_plain_code = generate_random_code(8)
@@ -104,7 +104,7 @@ def index():
         mail.send(msg)
 
         flash('File uploaded, code generated and email sent!', 'success')
-        return redirect(url_for('index'))
+        return redirect(url_for('transferQaulipro'))
 
     # Load files depending on code
     folder_code = code_entry.plain_code
@@ -119,7 +119,7 @@ def index():
         if os.path.exists(folder_path):
             files = [f"{folder_code}/{f}" for f in os.listdir(folder_path)]
 
-    return render_template('index.html', files=files, default_code=(folder_code == '123456'))
+    return render_template('transferQaulipro.html', files=files, default_code=(folder_code == '123456'))
 
 
 @app.route('/uploads/<path:filepath>')
@@ -159,7 +159,7 @@ def delete_file(filepath):
     else:
         flash('Folder not found.', 'danger')
 
-    return redirect(url_for('index'))
+    return redirect(url_for('transferQaulipro'))
 
 @app.route('/logout')
 def logout():
